@@ -1,4 +1,7 @@
-/*	7. Write a program that determines the letter that lies halfway between two letters of the
+/*	Zomawia Sailo
+	zomawia@gmail.com
+
+7. Write a program that determines the letter that lies halfway between two letters of the
 		alphabet as input by the user.For example, if the user inputs ‘A’ and ‘Z’, the output should
 		be ‘M’.
 		
@@ -34,17 +37,21 @@ int main()
 	printf("\n\nFirst letter ASCII dec.: %d\n", chA);
 	printf("2nd  letter ASCII dec.: %d\n", chB);
 
-	//calculate letter difference
-	if (chA >= 97)
-	{
-		chA -= 32;
-	}
-	if (chB >= 97)
-	{
-		chB -= 32;
-	}
+	//calculate letter difference using if statements
+	//if (chA >= 97)
+	//{
+	//	chA -= 32;
+	//}
+	//if (chB >= 97)
+	//{
+	//	chB -= 32;
+	//}
+
+	// calculate using modulus/normalization
+	chA = (chA - 65) % 32;
+	chB = (chB - 65) % 32;
 	
-	iDiff = (chB + chA) / 2;
+	iDiff = (chB + chA) / 2 + 65;
 
 	//output difference
 	printf("\n\nDifference letter: %c\n", iDiff);
