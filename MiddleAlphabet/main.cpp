@@ -20,32 +20,40 @@
 
 int main()
 {
-	char chA, chB;
-	int iA,	iB,	iDiff;
+	char chA = 0, chB = 0;
+	//int iA,	iB;
+	int	iDiff = 0;
 	
 	//input 2 char
-	printf("Enter letter: ");
+	printf("Enter a letter: ");
 	scanf_s(" %c", &chA);
 
 	printf("Enter another letter: ");
 	scanf_s(" %c", &chB);
 	
-	printf("First letter ASCII: %d\n", chA);
-	printf("2nd  letter ASCII: %d\n", chB);
+	printf("\n\nFirst letter ASCII dec.: %d\n", chA);
+	printf("2nd  letter ASCII dec.: %d\n", chB);
 
 	//calculate letter difference
-	iA = chA;
-	iB = chB;
-	iDiff = (iB + iA) / 2;
+	if (chA >= 97)
+	{
+		chA -= 32;
+	}
+	if (chB >= 97)
+	{
+		chB -= 32;
+	}
+	
+	iDiff = (chB + chA) / 2;
 
 	//output difference
-	printf("Difference letter: %c\n", iDiff);
-	printf("Difference letter ASCII: %d\n", iDiff);
+	printf("\n\nDifference letter: %c\n", iDiff);
+	printf("Difference letter ASCII dec.: %d\n", iDiff);
 
 	//	Do you know how to deal with upper vs.lower case letters ?
-	//
+	// **yes**
 	//	Does it matter if the letters are input in reverse order ?
-	//
+	// **no it doesn't matter**
 
 
 	system("pause");
