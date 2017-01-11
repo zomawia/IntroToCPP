@@ -1,84 +1,81 @@
+#include <list>
+#include <iostream>
+#include <random>
 
-
-// rule of 5
+using namespace std;
 
 class Tree {
-private:
+public:
 	struct Node {
 		int data;
 		Node *left, *right;
-		Node() {};
+		//Node() {};
 		Node(int v) : data(v), left(nullptr), right(nullptr) {};
 	};
 
 	Node *root;
 
-	void insert(int val, Node *leaf) {
-		if (val < leaf->data) {
-			if (leaf->left != nullptr)
-				insert(val, leaf->left);
-			else {
-				leaf->left = new Node;
-				leaf->left->data = val;
-				leaf->left->left = nullptr;
-				leaf->left->right = nullptr;
-			}
-		}
-		else if (val >= leaf->data) {
-			if (leaf->right != nullptr)
-				insert(val, leaf->right);
-			else {
-				leaf->right = new Node;
-				leaf->right->data = val;
-				leaf->right->left = nullptr;
-				leaf->right->right = nullptr;
-			}
-		}
-	}
-
-	Node *find(int val, Node *leaf) {
-		if (leaf != nullptr) {
-			if (val == leaf->data)
-				return leaf;
-			if (val < leaf->data)
-				return find(val, leaf->left);
-			else
-				return find(val, leaf->right);
-		}
-		else return nullptr;
-	}
-	int _childCount(const Node*n) const { int retval = 0; if (n->left) retval++; if (n->right) retval++; return retval; }
-public:
 	Tree() : root(nullptr) {};
-	~Tree() {}; // delete all nodes
+	//~Tree() {}; // delete all nodes
 
 	bool isEmpty() const { return root == nullptr; }
 
-	bool find(int val) {
+	bool find(int val) const
+	{
 		Node *t = root;
 
-		while (t != nullptr) {
-			if (val == t->data) return true;
+		while (t != nullptr)
+		{
+			if (val == t->data)
+				return true;
 
-			if (val < t->data) t = t->left;
+			if (val < t->data)
+				t = t->left;
+
 			else t = t->right;
 		}
-		
-		//return find(val, root) != nullptr;
-	}
-	
-	bool insert(int val) {	
-		if (find(val)) return false;
 
-		if (isEmpty()) {
+		return false;
+	}
+
+	bool findR(int val) const
+	{
+		if (root != nullptr)
+			return _findR(root->left, val) || _findR(root->right, val);
+		return false;
+	}
+
+	bool _findR(const Node *n, int val) const
+	{
+		if (n == nullptr) return false;
+		else if (n->data == val) return true;
+
+		return _findR(n->left, val) || _findR(n->right, val);
+	}
+
+	int _childCount(const Node *n) const
+	{
+		int retval = 0;
+		if (n->left) retval++;
+		if (n->right) retval++;
+		return retval;
+	}
+
+	bool insert(int val)
+	{
+		if (root == nullptr)
+		{
 			root = new Node(val);
 			return true;
 		}
 
 		Node *t = root;
-
-		while (true) {
-			if (val < t->data) {
+		while (true)
+		{
+			if (val == t->data)
+				return false;
+			if (val < t->data)
+			{
 				if (t->left == nullptr)
 				{
 					t->left = new Node(val);
@@ -86,7 +83,8 @@ public:
 				}
 				t = t->left;
 			}
-			else {
+			else //val > t->data
+			{
 				if (t->right == nullptr)
 				{
 					t->right = new Node(val);
@@ -95,93 +93,181 @@ public:
 				t = t->right;
 			}
 		}
-		
-		/*if (root != nullptr)
-			insert(val, root);
-		else {
-			root = new Node;
-			root->data = val;
-			root->left = nullptr;
-			root->right = nullptr;
-		}*/
 	}
-	
-	bool remove(int val) {
-		Node *t = root;
-		
-		while (true) {
-			if (t == nullptr) return false;
 
-			if (t->data == val) {
-				//2 child deletion
-				Node *tt;
-				Node *ts = t->right;
-				
-				if (ts->left == nullptr) {
-					ts = t;
-					tt = t->right;
+	bool remove(int val)
+	{
+		// If we are deleting the root node and it has no children.
+		if (root != nullptr && root->data == val && root->left == nullptr && root->right == nullptr)
+		{
+			delete root;
+			root = nullptr;
+			return true;
+		}
+
+		Node *t = root;
+
+		while (true)
+		{
+			if (t == nullptr)
+				return false;
+
+			if (t->data == val)
+			{
+				Node *ts, *tt; // parent and promotee
+				ts = t->right; // first assumed parent is the right node
+
+				if (ts->left == nullptr) // if right node doesn't have children
+				{
+					ts = t;			// the target node becomes the parent
+					tt = t->right;  // and the right node becomes the promotee
+
+					t->data = tt->data; // promote the value
+					ts->right = tt->right; // parent adopts promotee's child
+					delete tt; // delete the promotee
 				}
-				
-				//find smallest larger number??
-				else {
-					while (ts->left->left != nullptr) {
+				else
+				{
+					while (ts->left->left != nullptr)
 						ts = ts->left;
-						tt = t->left;
-					}							
+					tt = ts->left;
+
+					t->data = tt->data; // promote the value
+					ts->left = tt->right; // parent adopts promotee's child
+					delete tt; // delete the promotee
 				}
-				t->data = tt->data;
-				ts->left = tt->right;
-				delete tt;
+
+				return true;
 			}
 
-			if (t->left->data == val && t->left->data == val && _childCount(t->left) <= 1) {
+			if (t->left != nullptr && t->left->data == val && _childCount(t->left) <= 1)
+			{
 				Node *tt = t->left;
 				t->left = t->left->left != nullptr ? t->left->left : t->left->right;
 				delete tt;
+				return true;
 			}
 
-			if (t->right->data == val && t->right->data == val && _childCount(t->right) <= 1) {
+			if (t->right != nullptr && t->right->data == val && _childCount(t->right) <= 1)
+			{
 				Node *tt = t->right;
 				t->right = t->right->right != nullptr ? t->right->right : t->right->left;
 				delete tt;
+				return true;
 			}
 
 			t = val < t->data ? t->left : t->right;
 		}
 
 	}
-	//	if (isEmpty()) return false;
-	//	
-	//	if (val == root->data) {
-	//		delete root;
-	//		root = nullptr;
-	//		return true;
-	//	}
 
-	//	if (find(val))
-	//	{
-	//		Node *t = find(val, root);			
-	//		
-	//		//leaf node
-	//		if (t->left == nullptr && t->right == nullptr) {
-	//			if (t->data > root->data) root->right = nullptr;
-	//			else root->left = nullptr;
-	//			delete t;
-	//		}
+	void inPrint() const
+	{
+		_inPrint(root);
+	}
 
-	//		//one child
-	//		if ((t->left == nullptr && t->right != nullptr) || (t->left != nullptr && t->right == nullptr)) {
+	void prePrint() const
+	{
+		_prePrint(root);
+	}
 
-	//		}
+	void postPrint() const
+	{
+		_postPrint(root);
+	}
 
-	//		//two child
-	//		if (t->left != nullptr && t->right != nullptr) {
-	//			Node *sub = t;
-	//			if (t->left)
-	//		}
-	//	}
-	//	else {
-	//		//doesnt exist
-	//	}
-	//}
+	void _inPrint(Node *n) const
+	{
+		if (n == nullptr) return;
+		_inPrint(n->left);
+		cout << n->data << " ";
+		_inPrint(n->right);
+	}
+
+	void _prePrint(Node *n) const
+	{
+		if (n == nullptr) return;
+		cout << n->data << " ";
+		_prePrint(n->left);
+		_prePrint(n->right);
+	}
+
+	void _postPrint(Node *n) const
+	{
+		if (n == nullptr) return;
+		_postPrint(n->left);
+		_postPrint(n->right);
+		cout << n->data << " ";
+	}
+
+	void bfsPrint() const {
+
+		if (root == nullptr) return;
+		
+		std::list<Node*> frontier;
+		frontier.push_back(root);
+		// what is the loop condition
+
+		while (!frontier.empty()) {
+			
+			// exploration
+			Node *t = frontier.front(); // returns first element
+			frontier.pop_front(); // removes first element
+
+			std::cout << t->data << " ";
+
+			// discovery		
+			if (t->left != nullptr) frontier.push_back(t->left); // puts element into the end
+			if (t->right != nullptr) frontier.push_back(t->right);
+
+		}
+	}
+
+	void fbsPrint() const {
+
+		if (root == nullptr) return;
+
+		std::list<Node*> frontier;
+		frontier.push_back(root);
+		// what is the loop condition
+
+		while (!frontier.empty()) {
+
+			// exploration
+			Node *t = frontier.back(); // returns first element
+			frontier.pop_back(); // removes first element
+
+			std::cout << t->data << " ";
+
+			// discovery		
+			if (t->left != nullptr) frontier.push_front(t->left); // puts element into the end
+			if (t->right != nullptr) frontier.push_front(t->right);
+
+		}
+	}
 };
+
+void main() {
+	Tree myTree;
+
+	for (int i = 0; i < 20; ++i) {
+		int r = rand() % 30;
+		myTree.insert(r);
+	}
+	myTree.inPrint();
+	cout << "inprint" << endl;
+
+	myTree.prePrint();
+	cout << "preprint" << endl;
+
+	myTree.postPrint();
+	cout << "postprint" << endl;
+
+	myTree.bfsPrint();
+	cout << "bfsprint" << endl;
+
+	myTree.fbsPrint();
+	cout << "fbsprint" << endl;
+
+	system("pause");
+}
