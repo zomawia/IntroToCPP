@@ -4,11 +4,9 @@
 class stack {
 private: //what data to store, any helper functions
 
-	int *stuff;
-
-	stack *prev, *next;
-
-	int get();
+	const static int SIZE = 10;
+	int backing[SIZE];
+	int head = 0;
 	
 
 public:

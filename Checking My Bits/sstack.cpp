@@ -2,7 +2,17 @@
 
 void stack::push(int value)
 {
-	stack *temp = new stack;
+	backing[head] = value;
+	head++;
+}
 
-	temp->stuff = &value;	
+int stack::pop()
+{
+	head--;
+	return backing[head];
+}
+
+int stack::peek()
+{
+	return 0;
 }
