@@ -24,9 +24,15 @@
     <ClCompile Include="hash.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sstack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hash.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sstack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

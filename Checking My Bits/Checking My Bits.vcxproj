@@ -113,9 +113,11 @@
     <ClCompile Include="bit.cpp" />
     <ClCompile Include="hash.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="sstack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hash.h" />
+    <ClInclude Include="sstack.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -25,6 +25,7 @@ class hashtable {
 		bool isSet = false;
 		int key;
 		int value;
+
 	};
 
 	//backing array
