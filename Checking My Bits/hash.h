@@ -34,7 +34,6 @@ class hashtable {
 
 public:
 	void set(int key, int value);
-
 	int get(int key);
 
 	bool isSet(int key);
