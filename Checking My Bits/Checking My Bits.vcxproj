@@ -113,10 +113,13 @@
     <ClCompile Include="bit.cpp" />
     <ClCompile Include="hash.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="queue.cpp" />
     <ClCompile Include="sstack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hash.h" />
+    <ClInclude Include="LinkedList.h" />
+    <ClInclude Include="queue.h" />
     <ClInclude Include="sstack.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
