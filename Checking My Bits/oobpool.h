@@ -11,9 +11,9 @@ class obpool
 	// Backing array for object pool.
 	std::vector<T> pool;
 	std::vector<bool> poolValidity;
-	std::vector<size_t> nextList; //given an index, what is the next valid slot?
+	//std::vector<size_t> nextList; //given an index, what is the next valid slot?
 
-	size_t openHead, closedHead;  // the idx of the open and closed slots
+	//size_t openHead, closedHead;  // the idx of the open and closed slots
 
 	// Returns the index of the first empty slot found.
 	// Returns -1 if an empty index cannot be found.
@@ -82,8 +82,22 @@ public:
 		int getIndex() const { return index; };
 
 		// Moves the handle to the next valid element in the pool
-		handle &operator++() {
+		handle &operator++() {			
 			
+			for (size_t i = index + 1; i < pool->poolValidity.size(); ++i) {
+				if (pool->poolValidity[i]) {
+					index = i;
+					return *this;
+				}
+			}			
+			index = pool->pool.size();
+			return *this;
+
+			//index++;
+			//while (!isValid()) {
+			//	index++;
+			//}
+			//return handle(pool, index);	
 		}
 
 		// Returns a reference to the object in the object pool
@@ -100,7 +114,16 @@ public:
 
 		// Returns true they're pointing to the same slot.
 		// Otherwise, returns false.
-		bool operator==(const handle& other) { return other->getIndex() == getIndex(); }
+		bool operator==(const handle& other){ 
+			return other.index == index && other.pool == pool; 
+		}
+
+		// Returns true they're NOT pointing to the same slot.
+		// Otherwise, returns false.
+		bool operator!=(const handle& other){ 
+			return other.index != index || other.pool != pool; 
+		}
+
 	};	
 
 	// Adds the given object to the object pool.
@@ -110,8 +133,7 @@ public:
 		assert(idx != -1);
 
 		pool[idx] = cpy;
-		poolValidity[idx] = true;
-		
+		poolValidity[idx] = true;		
 
 		return handle(this, idx);
 	}
@@ -136,15 +158,21 @@ public:
 
 	// Returns a handle referring to the first valid slot.
 	handle begin() {
-		
+		for (size_t i = 0; i < poolValidity.size(); ++i)
+			if (poolValidity[i])
+				return handle(this, i);
 	}
 
 	// Returns a handle referring to the slot at the given index
 	handle get(size_t idx) { return handle(this, idx); }
 
 	// Returns a handle referring to the last valid slot.
-	handle end() {
-
+	handle end() {		
+		//int temp = 0;
+		//for (int i = 0; i < DEFAULT_POOL_SIZE; ++i)
+		//	if (isValid(i))
+		//		temp = i;
+		return handle(this, poolValidity.size());
 	}
 
 };
