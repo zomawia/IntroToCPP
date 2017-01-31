@@ -5,24 +5,9 @@
 
 void main() {
 
-	//queue <int> Q;
+	obpool <int> pool;
 
-	//Q.reserve(4);
-
-	//Q.push(5);
-	//Q.push(1);
-	//Q.push(2);
-	//Q.push(6);
-
-	//std::cout << Q.top() << std::endl;
-
-	//Q.clear();
-
-	//std::cout << Q.top() << std::endl;
-
-	obpool pool;
-
-	obpool::handle han = pool.push(5);
+	obpool<int>::handle han = pool.push(5);
 	assert(han.value() == 5);
 	assert(han.isValid());
 
@@ -30,7 +15,7 @@ void main() {
 	assert(pool.isValid(1) == false);
 	assert(pool.isValid(2) == false);
 
-	obpool::handle han2 = pool.push(3);
+	obpool<int>::handle han2 = pool.push(3);
 	assert(han2.value() == 3);
 
 	pool.pop(han.getIndex());
