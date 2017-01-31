@@ -13,7 +13,7 @@ public:
 	~queue() {	delete[] stuff; }
 
 	//access functions
-	void push(int value) {	stuff->add_back(value);	}
+	void push(const T& value) {	stuff->add_back(value);	}
 	int pop() {
 		int retval;
 		retval = stuff->front();
@@ -33,7 +33,7 @@ public:
 
 	
 	//accessory functions
-	bool empty() { return stuff->size() > 0; }
+	bool empty() { return stuff->size() == 0; }
 	void clear() { stuff->clear(); }
 	size_t size() const { return stuff->size() };
 
