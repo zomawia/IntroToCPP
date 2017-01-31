@@ -38,7 +38,11 @@ public:
 
 		// Returns the index of the slot pointed to by this handle.
 		int getIndex() const;
+
+		void resize(size_t size);
 	};
+
+	
 
 	// Adds the given object to the object pool.
 	// Returns a handle with the appropriate information to access the object pool.
